@@ -11,8 +11,7 @@ spec:
   generators:
     - matrix:
         generators:
-          - clusters:
-              name: in-cluster
+          - clusters: {}
           - merge:
               mergeKeys:
                 - 'chart_name'
