@@ -68,5 +68,5 @@ spec:
         managedNamespaceMetadata:
           labels:
             {{- range $additionalLabelKey, $additionalLabelValue := .additionalLabels }}
-              {{- $additionalLabelKey:  $additionalLabelValue}}
+            {{- $additionalLabelKey}}:  {{$additionalLabelValue}}
             {{- end }}
