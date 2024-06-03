@@ -62,11 +62,11 @@ spec:
           labels:
             pod-security.kubernetes.io/enforce: '{{default "restricted" .podSecurityStandardProfile}}'
             pod-security.kubernetes.io/enforce-version: latest
-  templatePatch:
+  templatePatch: |
     spec:
       syncPolicy:
         managedNamespaceMetadata:
           labels:
-            {{- range $additionalLabelKey, $additionalLabelValue := .additionalLabels }}
-            {{- $additionalLabelKey}}:  {{$additionalLabelValue}}
-            {{- end }}
+          {{- range $additionalLabelKey, $additionalLabelValue := .additionalLabels }}
+            {{- $additionalLabelKey}}: {{ $additionalLabelValue }}
+          {{- end }}
