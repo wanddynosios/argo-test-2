@@ -5,5 +5,5 @@ chart:
   project: podinfo
   version: 6.6.3
 podSecurityStandardProfile: privileged
-additionalLabels:
-  something: "new"
+#additionalLabels:
+#  something: "new"
