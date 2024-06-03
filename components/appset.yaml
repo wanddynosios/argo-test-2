@@ -6,6 +6,8 @@ kind: ApplicationSet
 metadata:
   name: cluster-addons
   namespace: default
+  labels:
+    argocd.argoproj.io/instance: test
 spec:
   goTemplate: true
   generators:
