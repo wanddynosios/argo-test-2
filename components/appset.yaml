@@ -1,0 +1,67 @@
+###
+### Attention: The GitOps structure is mapped in the pipelines for mirroring images and creating standard changes. If changes are made here to the functionality of the application set, these must also be made in the scripts (in the .ci folder).
+###
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-addons
+  namespace: argo-cd
+spec:
+  goTemplate: true
+  generators:
+    - matrix:
+        generators:
+          - clusters:
+              name: in-cluster
+          - merge:
+              mergeKeys:
+                - 'chart_name'
+              generators:
+                - git:
+                    repoURL: "https://github.com/wanddynosios/argo-test-2"
+                    revision: main
+                    files:
+                      - path: "cluster-addons/**/config.yaml"
+      selector:
+        matchLabels:
+          install: "yes"
+  template:
+    metadata:
+      name: '{{.chart_name}}-{{.name}}'
+      labels:
+        type: 'cluster-addon'
+    spec:
+      destination:
+        name: '{{.name}}'
+        namespace: '{{.chart_name}}'
+      project: 'default'
+      sources:
+        - repoURL: '{{.chart.repository}}'
+          chart: '{{.chart.project}}'
+          targetRevision: '{{.chart.version}}'
+          helm:
+            # check order of value files
+            valueFiles:
+              - '$values/cluster-addons/{{.chart_name}}/values.yaml'
+            ignoreMissingValueFiles: true
+        - repoURL: 'https://github.com/wanddynosios/argo-test-2'
+          targetRevision: main
+          ref: values
+      syncPolicy:
+        automated:
+          allowEmpty: true
+          prune: false
+          selfHeal: true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 5m
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply={{default "false" .serverSideApply}}
+        managedNamespaceMetadata:
+          labels:
+            pod-security.kubernetes.io/enforce: '{{default "restricted" .podSecurityStandardProfile}}'
+            pod-security.kubernetes.io/enforce-version: latest

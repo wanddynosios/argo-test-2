@@ -1,0 +1,7 @@
+chart_name: podinfo
+install: "yes"
+chart:
+  repository: ghcr.io/stefanprodan/charts
+  project: podinfo
+  version: 6.6.3
+podSecurityStandardProfile: privileged
