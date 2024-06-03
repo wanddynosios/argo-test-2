@@ -6,4 +6,4 @@ chart:
   version: 6.6.3
 podSecurityStandardProfile: privileged
 additionalLabels:
-   - something: "else"
+   something: "new"
